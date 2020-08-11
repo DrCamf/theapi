@@ -22,10 +22,11 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($data->name) &&
+    !empty($data->retname) &&
     !empty($data->antal) &&
-    !empty($data->description) &&
-    !empty($data->category_id)
+    !empty($data->preptime) &&
+    !empty($data->time) &&
+    
 ){
   
 

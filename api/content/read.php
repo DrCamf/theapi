@@ -37,8 +37,12 @@ if($num>0){
             "id" => $id,
             "retname" => $retname,
             "antal" => $howmany,
+            "prep_time" => $preptime,
+            "time" => $totaltime,
             "madname" => $madname,
             "rettype" => $rettype,
+
+            "indhold" => $indhold_item=array()
         );
   
         array_push($products_arr["records"], $product_item);
