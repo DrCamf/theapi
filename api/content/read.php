@@ -17,7 +17,7 @@ $db = $database->getConnection();
 $recipes = new Content($db);
 
 // query products
-$stmt = $recipes->read();
+$stmt = $recipes->read("Salat");
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
@@ -41,7 +41,8 @@ if($num>0){
             "time" => $totaltime,
             "madname" => $madname,
             "rettype" => $rettype,
-
+            "recipeurl" => $recipeurl,
+            "imageurl" => $imageurl,
             "indhold" => $indhold_item=array()
         );
   
@@ -60,7 +61,7 @@ if($num>0){
   
     // tell the user no products found
     echo json_encode(
-        array("message" => "No products found.")
+        array("message" => "No recipes found.")
     );
 }
 

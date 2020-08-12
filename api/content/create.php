@@ -26,8 +26,56 @@ if(
     !empty($data->antal) &&
     !empty($data->preptime) &&
     !empty($data->time) &&
+    !empty($data->recipe_url) &&
+    !empty($data->image_url) &&
+    !empty($data->rettypename) &&
+    !empty($data->madname) &&
+    !empty($data->indhold) 
     
 ){
   
+     // set product property values
+     $recipes->retname = $data->retname;
+     $recipes->howmany = $data->antal;
+     $recipes->preptime = $data->preptime;
+     $recipes->time = $data->time;
+     $recipes->recipeurl = $data->recipe_url;
+     $recipes->imageurl = $data->imageurl;
+     $recipes->indhold = $data->indhold;
+     $recipes->madname = $data->madname;
+     $recipes->rettype = $data->rettype;
+     
+     
+   
+     // create the product
+     if($recipes->create()){
+   
+         // set response code - 201 created
+         http_response_code(201);
+   
+         // tell the user
+         echo json_encode(array("message" => "Recipe was created."));
+     }
+   
+     // if unable to create the product, tell the user
+     else{
+   
+         // set response code - 503 service unavailable
+         http_response_code(503);
+   
+         // tell the user
+         echo json_encode(array("message" => "Unable to create recipe."));
+     }
+ }
+   
+ // tell the user data is incomplete
+ else{
+   
+     // set response code - 400 bad request
+     http_response_code(400);
+   
+     // tell the user
+     echo json_encode(array("message" => "Unable to create recipe. Data is incomplete."));
+ }
 
 ?>
