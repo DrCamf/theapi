@@ -17,7 +17,7 @@ $db = $database->getConnection();
 $recipes = new Content($db);
 
 // query products
-$stmt = $recipes->read("Salat");
+$stmt = $recipes->read();
 $num = $stmt->rowCount();
 
 // check if more than 0 record found
@@ -34,16 +34,15 @@ if($num>0){
         extract($row);
   
         $product_item=array(
-            "id" => $id,
-            "retname" => $retname,
+            "name" => $retname,
             "antal" => $howmany,
             "prep_time" => $preptime,
             "time" => $totaltime,
-            "madname" => $madname,
-            "rettype" => $rettype,
+            /*"madname" => $madname,
+            "rettype" => $rettype,*/
             "recipeurl" => $recipeurl,
             "imageurl" => $imageurl,
-            "indhold" => $indhold_item=array()
+            /*"indhold" => $indhold_item=array()*/
         );
   
         array_push($products_arr["records"], $product_item);
