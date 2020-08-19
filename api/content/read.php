@@ -17,35 +17,59 @@ $db = $database->getConnection();
 $recipes = new Content($db);
 
 // query products
-$stmt = $recipes->read();
+$stmt = $recipes->read("salat", "mad");
+$stmt1 = $recipes->readind("salat", "mad");
 $num = $stmt->rowCount();
+/*$id = null;
+$retname = null;
+$howmany = null;
+$preptime = null;
+$totaltime = null;
+$recipeurl = null;
+$imageurl = null;
+$indhold = null;
+$volume = null;
+$voltype = null;*/
 
 // check if more than 0 record found
 if($num>0){
   
     // products array
     $products_arr=array();
-    $products_arr["records"]=array();
+    //$products_arr["recipes"]=array();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+               
         // extract row
         // this will make $row['name'] to
         // just $name only
         extract($row);
   
         $product_item=array(
-            "name" => $retname,
-            "antal" => $howmany,
-            "prep_time" => $preptime,
-            "time" => $totaltime,
-            /*"madname" => $madname,
-            "rettype" => $rettype,*/
-            "recipeurl" => $recipeurl,
-            "imageurl" => $imageurl,
-            /*"indhold" => $indhold_item=array()*/
+            $id = $row["id"],
+            $retname = $row["ret_name"],
+            $howmany = $row["antal"],
+            $preptime = $row["prep_time"],
+            $totaltime = $row["total_time"],
+            $recipeurl = $row["recipe_url"],
+            $imageurl = $row["image_url"],
+            $madname = $row["mad_name"],
+            $rettype = $row["rettype_name"]
+                     
+           
         );
-  
-        array_push($products_arr["records"], $product_item);
+        array_push($products_arr, $product_item);
+       /* while ( $row = $stmt1->fetch(PDO::FETCH_ASSOC) {
+            $indhold_item =array(
+            $indhold = $row["indhold_name"],
+            $volume = $row["volume"],
+            $voltype = $row["vol_type_name"]
+            );
+        }*/
+       
+        
+       
+        
     }
   
     // set response code - 200 OK
