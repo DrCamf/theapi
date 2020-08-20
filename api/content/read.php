@@ -18,33 +18,25 @@ $recipes = new Content($db);
 
 // query products
 $stmt = $recipes->read("salat", "mad");
-$stmt1 = $recipes->readind("salat", "mad");
+$stmtmore = $recipes->readMore("salat", "mad");
+
 $num = $stmt->rowCount();
-/*$id = null;
-$retname = null;
-$howmany = null;
-$preptime = null;
-$totaltime = null;
-$recipeurl = null;
-$imageurl = null;
-$indhold = null;
-$volume = null;
-$voltype = null;*/
 
 // check if more than 0 record found
 if($num>0){
   
     // products array
     $products_arr=array();
-    //$products_arr["recipes"]=array();
+   
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-               
-        // extract row
+       
+       // extract row
         // this will make $row['name'] to
         // just $name only
         extract($row);
-  
+        $i = 1;
+       
         $product_item=array(
             $id = $row["id"],
             $retname = $row["ret_name"],
@@ -54,23 +46,16 @@ if($num>0){
             $recipeurl = $row["recipe_url"],
             $imageurl = $row["image_url"],
             $madname = $row["mad_name"],
-            $rettype = $row["rettype_name"]
-                     
-           
+            $rettype = $row["rettype_name"],
+            $indholditem=array(secondArray($stmtmore,  $i)) 
+      
         );
+       
+        
         array_push($products_arr, $product_item);
-       /* while ( $row = $stmt1->fetch(PDO::FETCH_ASSOC) {
-            $indhold_item =array(
-            $indhold = $row["indhold_name"],
-            $volume = $row["volume"],
-            $voltype = $row["vol_type_name"]
-            );
-        }*/
-       
-        
-       
-        
+        $i++;
     }
+    
   
     // set response code - 200 OK
     http_response_code(200);
@@ -85,8 +70,26 @@ if($num>0){
     // tell the user no products found
     echo json_encode(
         array("message" => "No recipes found.")
-    );
+    );           
 }
 
+function secondArray($st, $i) {
+    
+    $ind = array();
 
+    $t = 0;
+    while($row = $st->fetch(PDO::FETCH_ASSOC)) {
+
+        extract($row);
+            if($i == $row["ret_id"]){
+                $ind[$t] = [$retid = $row["ret_id"],
+                $indhold = $row["indhold_name"],
+                $volume = $row["volume"],
+                $voltype = $row["vol_type_name"]];
+            }
+  
+    $t++;
+    }
+    return $ind;
+}
 ?>

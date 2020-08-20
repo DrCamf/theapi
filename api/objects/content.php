@@ -5,7 +5,6 @@ class Content{
     // Database connection 
     private $conn;
     
-
     // object properties
     public $id;
     public $retname;
@@ -14,6 +13,7 @@ class Content{
     public $time;
     public $recipeUrl;
     public $imageurl;
+    public $retid;
     public $indhold;
     public $volume;
     public $voltype;
@@ -26,14 +26,16 @@ class Content{
 
     // read products
     public function read($recipeserch, $searchtype){
-       //$indholditem = new Ware();
-        //$mad = "Salat";
         // select all query
         if ($searchtype == "mad") {
-            $query = "SELECT ret.id, ret.ret_name, ret.antal, ret.total_time, ret.prep_time, ret.image_url, ret.recipe_url, mad.mad_name, rettype.rettype_name FROM Ret INNER JOIN madret ON madret.ret_id = ret.id INNER JOIN mad ON madret.mad_id = mad.id INNER JOIN rettype ON ret.rettype_id = rettype.id WHERE mad.mad_name = '$recipeserch';";
+            $query = "SELECT ret.id, ret.ret_name, ret.antal, ret.total_time, ret.prep_time, ret.image_url, ret.recipe_url, 
+            mad.mad_name, rettype.rettype_name FROM Ret INNER JOIN madret ON madret.ret_id = ret.id INNER JOIN mad ON madret.mad_id = mad.id 
+            INNER JOIN rettype ON ret.rettype_id = rettype.id WHERE mad.mad_name = '$recipeserch';";
         } else {
-            $query = "SELECT ret.id, ret.ret_name, ret.antal, ret.total_time, ret.prep_time, ret.image_url, ret.recipe_url, mad.mad_name, rettype.rettype_name FROM Ret INNER JOIN madret ON madret.ret_id = ret.id INNER JOIN mad ON madret.mad_id = mad.id INNER JOIN rettype ON ret.rettype_id = rettype.id WHERE rettype.rettype_name = '$recipeserch' ORDER BY id DESC;
-            SELECT imperial_volume.ret_id, indhold.indhold_name, imperial_volume.volume, volume_type.vol_type_name FROM indhold INNER JOIN imperial_volume ON imperial_volume.indhold_id = indhold.id INNER JOIN volume_type ON imperial_volume.volume_type_id = volume_type.id INNER JOIN madret ON imperial_volume.ret_id = madret.ret_id INNER JOIN mad ON madret.mad_id = mad.id WHERE mad.mad_name = '$recipeserch'";
+            $query = "SELECT ret.id, ret.ret_name, ret.antal, ret.total_time, ret.prep_time, ret.image_url, ret.recipe_url, mad.mad_name, 
+            rettype.rettype_name FROM Ret INNER JOIN madret ON madret.ret_id = ret.id INNER JOIN mad ON madret.mad_id = mad.id 
+            INNER JOIN rettype ON ret.rettype_id = rettype.id WHERE rettype.rettype_name = '$recipeserch' ORDER BY id DESC;
+           ";
         
         }
         
@@ -48,6 +50,37 @@ class Content{
     
         return $stmt;
     }
+
+
+    public function readMore($recipeserch, $searchtype){
+      
+         // select all query
+         if ($searchtype == "mad") {
+             $query = "SELECT imperial_volume.ret_id, indhold.indhold_name, imperial_volume.volume, volume_type.vol_type_name FROM indhold 
+             INNER JOIN imperial_volume ON imperial_volume.indhold_id = indhold.id 
+             INNER JOIN volume_type ON imperial_volume.volume_type_id = volume_type.id 
+             INNER JOIN madret ON imperial_volume.ret_id = madret.ret_id INNER JOIN mad ON madret.mad_id = mad.id 
+             WHERE mad.mad_name = '$recipeserch'";
+         } else {
+             $query = "SELECT imperial_volume.ret_id, indhold.indhold_name, imperial_volume.volume, volume_type.vol_type_name FROM indhold 
+             INNER JOIN imperial_volume ON imperial_volume.indhold_id = indhold.id 
+             INNER JOIN volume_type ON imperial_volume.volume_type_id = volume_type.id 
+             INNER JOIN madret ON imperial_volume.ret_id = madret.ret_id INNER JOIN mad ON madret.mad_id = mad.id 
+             WHERE mad.mad_name = '$recipeserch'";
+         
+         }
+         
+         
+     
+         // prepare query statement
+         $stmt = $this->conn->prepare($query);
+         
+           
+         // execute query
+         $stmt->execute();
+     
+         return $stmt;
+     }
    
 
 
