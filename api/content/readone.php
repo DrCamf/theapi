@@ -17,11 +17,18 @@ $db = $database->getConnection();
 // initialize object
 $recipes = new Content($db);
 
+// set ID property of record to read
+$recipes->id = isset($_GET['id']) ? $_GET['id'] : die();
+
+
 // query products
 $stmt = $recipes->read("salat", "mad");
+$stmtmore = $recipes->readMore("salat", "mad");
+
+$num = $stmt->rowCount();
 
 // check if more than 0 record found
-if($num>0){
+if($recipes->name!=null){
   
     // products array
     $products_arr=array();
@@ -32,7 +39,7 @@ if($num>0){
         // this will make $row['name'] to
         // just $name only
         extract($row);
-              
+               
         $product_item=array(
             $id = $row["id"],
             $retname = $row["ret_name"],
@@ -42,10 +49,12 @@ if($num>0){
             $recipeurl = $row["recipe_url"],
             $imageurl = $row["image_url"],
             $madname = $row["mad_name"],
-            $rettype = $row["rettype_name"]);
+            $rettype = $row["rettype_name"],
+            $indholditem=array(secondArray($stmtmore,  $id)) 
+      
+        );
     
         array_push($products_arr, $product_item);
-        
     }
  
     // set response code - 200 OK
@@ -64,6 +73,23 @@ if($num>0){
     );           
 }
 
+function secondArray($st, $i) {
+    
+    $ind = array();
 
+    $t = 0;
+    while($row = $st->fetch(PDO::FETCH_ASSOC)) {
 
+        extract($row);
+            if($i == $row["ret_id"]){
+                $ind[$t] = [$retid = $row["ret_id"],
+                $indhold = $row["indhold_name"],
+                $volume = $row["volume"],
+                $voltype = $row["vol_type_name"]];
+            }
+  
+    $t++;
+    }
+    return $ind;
+}
 ?>

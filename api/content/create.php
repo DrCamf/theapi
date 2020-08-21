@@ -22,14 +22,14 @@ $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($data->retname) &&
+    !empty($data->ret_name) &&
     !empty($data->antal) &&
-    !empty($data->preptime) &&
-    !empty($data->time) &&
+    !empty($data->prep_time) &&
+    !empty($data->total_time) &&
     !empty($data->recipe_url) &&
     !empty($data->image_url) &&
-    !empty($data->rettypename) &&
-    !empty($data->madname) &&
+    !empty($data->rettype_name) &&
+    !empty($data->mad_name) &&
     !empty($data->indhold) 
     
 ){
