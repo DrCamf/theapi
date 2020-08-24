@@ -105,6 +105,9 @@ class Content{
         $this->image_url=htmlspecialchars(strip_tags($this->image_url));
         $this->recipe_url=htmlspecialchars(strip_tags($this->recipe_url));
     
+        //get id+1
+        $rid = getLastPlusOne("ret");
+
         // bind values
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":antal", $this->antal);
@@ -121,7 +124,92 @@ class Content{
         return false;
       
     }
+
+    function controlIfIngredience($ingred) {
+        $query="SELECT indhold_name FROM indhold WHERE indhold_name = $ingred;"
+
+        $stmt = $this->conn->prepare($query);
+        
+        // execute query
+        $stmt->execute();
+     
+        return $stmt;
+
+    }
+
+    function createIngredience($rid, $table, $voltypid) {
+        $indid = getLastPlusOne("indhold") -1;
+
+
+        //Insert query
+        $query="INSERT INTO indhold SET indhold_name=:indhold_name;
+            INSERT INTO $table SET volume:volume, ret_id=:$rid, indhold_id=:$indid: volume_type_id=:$voltypid;"
+
+
+        $stmt = $this->conn->prepare($query);
+        
+        // sanitize
+        $this->volume=htmlspecialchars(strip_tags($this->volume));
+
+        //Binding
+        $stmt->bindParam(":indhold_name", $this->indhold_name);
+        $stmt->bindParam(":volume", $this->volume);
+
+        // execute query
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
+
+    }
 }
 
+// update the product
+function update(){
+ 
+    // update query
+    $query = "UPDATE
+                " . $this->table_name . "
+            SET
+                ret_name = :ret_name,
+                antal = :antal,
+                total_time = :total_time,
+                prep_time=:prep_time,
+                image_url=:image_url,
+                recipe_url=:recipe_url
+            WHERE
+                id = :id";
+                
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+ 
+    // sanitize
+   // sanitize
+   $this->name=htmlspecialchars(strip_tags($this->name));
+   $this->antal=htmlspecialchars(strip_tags($this->antal));
+   $this->total_time=htmlspecialchars(strip_tags($this->total_time));
+   $this->prep_time=htmlspecialchars(strip_tags($this->prep_time));
+   $this->image_url=htmlspecialchars(strip_tags($this->image_url));
+   $this->recipe_url=htmlspecialchars(strip_tags($this->recipe_url));
+   $this->id=htmlspecialchars(strip_tags($this->id));
+  
+ 
+    // bind new values
+    $stmt->bindParam(":name", $this->name);
+    $stmt->bindParam(":antal", $this->antal);
+    $stmt->bindParam(":time", $this->total_time);
+    $stmt->bindParam(":prep_time", $this->prep_time);
+    $stmt->bindParam(":image_url", $this->image_url);
+    $stmt->bindParam(":recipe_url", $this->recipe_url);
+    $stmt->bindParam(':id', $this->id);
+ 
+    // execute the query
+    if($stmt->execute()){
+        return true;
+    }
+ 
+    return false;
+}
 
 ?>

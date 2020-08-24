@@ -29,9 +29,7 @@ if(
     !empty($data->recipe_url) &&
     !empty($data->image_url) &&
     !empty($data->rettype_name) &&
-    !empty($data->mad_name) &&
-    !empty($data->indhold) 
-    
+    !empty($data->mad_name)    
 ){
   
      // set product property values
