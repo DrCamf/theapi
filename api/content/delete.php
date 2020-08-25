@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // required headers
 header("Access-Control-Allow-Origin: *");
@@ -7,49 +7,52 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
   
-// get database connection
+// include database and object file
 include_once '../config/database.php';
-  
-// instantiate product object
 include_once '../objects/content.php';
   
+// get database connection
 $database = new Database();
 $db = $database->getConnection();
   
-$recipes = new Content($db);
-
-// get posted data
+// prepare product object
+$recipe = new Content($db);
+  
+// get product id
 $data = json_decode(file_get_contents("php://input"));
-
- // set product property values
- $recipes->retname = $data->retname;
- $recipes->howmany = $data->antal;
- $recipes->preptime = $data->preptime;
- $recipes->time = $data->time;
- $recipes->recipeurl = $data->recipe_url;
- $recipes->imageurl = $data->imageurl;
- $recipes->indhold = $data->indhold;
- $recipes->madname = $data->madname;
- $recipes->rettype = $data->rettype;
-
-// update the product
-if($recipe->update()){
+  
+// set product id to be deleted
+$recipe->id = $data->id;
+  
+// delete the product
+if($recipe->delete()){
   
     // set response code - 200 ok
     http_response_code(200);
   
     // tell the user
-    echo json_encode(array("message" => "Recipe was updated."));
+    echo json_encode(array("message" => "Recipe was deleted."));
 }
-// if unable to update the product, tell the user
+  
+// if unable to delete the product
 else{
   
     // set response code - 503 service unavailable
     http_response_code(503);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to update Recipe."));
+    echo json_encode(array("message" => "Unable to delete Recipe."));
 }
+
+
+
+
+
+
+
+
+
+
 
 
 ?>
