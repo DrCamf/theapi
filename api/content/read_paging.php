@@ -7,7 +7,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../config/core.php';
 include_once '../shared/utilities.php';
 include_once '../config/database.php';
-include_once '../objects/product.php';
+include_once '../objects/content.php';
   
 // utilities
 $utilities = new Utilities();
@@ -17,10 +17,10 @@ $database = new Database();
 $db = $database->getConnection();
   
 // initialize object
-$product = new Product($db);
+$recipe = new Content($db);
   
 // query products
-$stmt = $product->readPaging($from_record_num, $records_per_page);
+$stmt = $recipe->readPaging($from_record_num, $records_per_page);
 $num = $stmt->rowCount();
   
 // check if more than 0 record found

@@ -20,6 +20,8 @@ $recipes = new Content($db);
 // query products
 $stmt = $recipes->read("salat", "mad");
 
+$num = $stmt->rowCount();
+
 // check if more than 0 record found
 if($num>0){
   

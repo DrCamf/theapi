@@ -1,5 +1,5 @@
 <?php 
-include_once '../objects/ware.php';
+
 class Content{
 
     // Database connection 
@@ -77,7 +77,7 @@ class Content{
          return $stmt;
      }
    
-    function getLastPlusOne($table) {
+    public function getLastPlusOne($table) {
         $query = "SELECT id+1 FROM" . $table . "ORDER BY id DESC LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -86,7 +86,7 @@ class Content{
     }
 
     // create recipe
-    function create(){
+    public function create(){
   
         // query to insert record
         $query = "INSERT INTO ret SET ret_name=:ret_name, antal=:antal, total_time=:total_time, prep_time=:prep_time, image_url=:image_url, recipe_url=:recipe_url;
@@ -125,49 +125,9 @@ class Content{
       
     }
 
-    function controlIfIngredience($ingred) {
-        $query="SELECT indhold_name FROM indhold WHERE indhold_name = $ingred;"
-
-        $stmt = $this->conn->prepare($query);
-        
-        // execute query
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC)
-        if($row>0 ) {
-            return true;
-        }
-        return false;
-    }
-
-    function createIngredience($rid, $table, $voltypid) {
-        $indid = getLastPlusOne("indhold") -1;
-
-
-        //Insert query
-        $query="INSERT INTO indhold SET indhold_name=:indhold_name;
-            INSERT INTO $table SET volume:volume, ret_id=:$rid, indhold_id=:$indid: volume_type_id=:$voltypid;"
-
-
-        $stmt = $this->conn->prepare($query);
-        
-        // sanitize
-        $this->volume=htmlspecialchars(strip_tags($this->volume));
-
-        //Binding
-        $stmt->bindParam(":indhold_name", $this->indhold_name);
-        $stmt->bindParam(":volume", $this->volume);
-
-        // execute query
-        if($stmt->execute()){
-            return true;
-        }
-    
-        return false;
-
-    }
 
     // update the product
-    function update(){
+    public function update(){
  
         // update query
         $query = "UPDATE
@@ -214,7 +174,7 @@ class Content{
     }
 
     // delete the product
-    function delete(){
+    public function delete(){
     
         // delete query
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
@@ -238,7 +198,7 @@ class Content{
 
 
     // search products
-    function search($keywords){
+    public function search($keywords){
   
         // select all query
         $query = "SELECT ret.id, ret.ret_name, ret.antal, ret.total_time, ret.prep_time, ret.image_url, ret.recipe_url, 
@@ -270,7 +230,7 @@ class Content{
   
         // select query
         $query = "SELECT
-                    c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
+                    ret.ret_name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
                 FROM
                     " . $this->table_name . " p
                     LEFT JOIN
@@ -304,8 +264,52 @@ class Content{
         return $row['total_rows'];
     }
 
+    public function controlIfIngredience($ingred) {
+        $query="SELECT indhold_name FROM indhold WHERE indhold_name = $ingred;";
+
+        $stmt = $this->conn->prepare($query);
+        
+        // execute query
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($row.count>0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function createIngredience($rid, $table, $voltypid ) {
+        $indid = getLastPlusOne("indhold") -1;
 
 
+        //Insert query
+        $query="INSERT INTO indhold SET indhold_name=:indhold_name;
+            INSERT INTO $table SET volume:volume, ret_id=:$rid, indhold_id=:$indid: volume_type_id=:$voltypid;";
+
+
+        $stmt = $this->conn->prepare($query);
+        
+        // sanitize
+        $this->indhold_name=htmlspecialchars(strip_tags($this->indhold_name));
+        $this->volume=htmlspecialchars(strip_tags($this->volume));
+
+        if(controlIfIngredience($this->indhold_name)) {
+            return false;
+        } else {
+            //Binding
+            $stmt->bindParam(":indhold_name", $this->indhold_name);
+            $stmt->bindParam(":volume", $this->volume);
+
+            // execute query
+            if($stmt->execute()){
+                return true;
+            }
+        
+            return false;
+        }
+        
+
+    }
 
 }
 

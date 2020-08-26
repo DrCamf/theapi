@@ -6,7 +6,7 @@ header("Content-Type: application/json; charset=UTF-8");
 // include database and object files
 include_once '../config/core.php';
 include_once '../config/database.php';
-include_once '../objects/product.php';
+include_once '../objects/content.php';
   
 // instantiate database and product object
 $database = new Database();
@@ -65,7 +65,7 @@ else{
   
     // tell the user no products found
     echo json_encode(
-        array("message" => "No products found.")
+        array("message" => "No Recipe found.")
     );
 }
 

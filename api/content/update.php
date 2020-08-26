@@ -21,16 +21,16 @@ $recipes = new Content($db);
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
 
- // set product property values
- $recipes->retname = $data->retname;
- $recipes->howmany = $data->antal;
- $recipes->preptime = $data->preptime;
- $recipes->time = $data->time;
- $recipes->recipeurl = $data->recipe_url;
- $recipes->imageurl = $data->imageurl;
- $recipes->indhold = $data->indhold;
- $recipes->madname = $data->madname;
- $recipes->rettype = $data->rettype;
+// set product property values
+$recipes->retname = $data->retname;
+$recipes->howmany = $data->antal;
+$recipes->preptime = $data->preptime;
+$recipes->total_time = $data->total_time;
+$recipes->recipeurl = $data->recipe_url;
+$recipes->imageurl = $data->imageurl;
+$recipes->indhold = $data->indhold;
+$recipes->madname = $data->madname;
+$recipes->rettype = $data->rettype;
 
 // update the product
 if($recipe->update()){
